@@ -1,0 +1,71 @@
+openapi: 3.0.0
+info:
+  title: Клон LeetCode API
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000/api
+paths:
+  /users:
+    get:
+      summary: Получить список пользователей
+      responses:
+        '200':
+          description: Список пользователей
+    post:
+      summary: Создать нового пользователя
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '201':
+          description: Пользователь создан
+  /problems:
+    get:
+      summary: Получить список задач
+      responses:
+        '200':
+          description: Список задач
+    post:
+      summary: Создать новую задачу
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Problem'
+      responses:
+        '201':
+          description: Задача создана
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        username:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        role:
+          type: string
+    Problem:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        examples:
+          type: string
+        difficulty:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+        additionalMaterials:
+          type: string
