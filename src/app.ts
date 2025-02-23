@@ -1,57 +1,32 @@
-import express, { Express, Request, Response, NextFunction } from 'express';
-import swaggerUi from 'swagger-ui-express';
-import swaggerJSDoc from 'swagger-jsdoc';
-import { routes } from './routes';
-import { initializeDatabase } from './config/database';
+import { AppDataSource } from './config/database.config';
+import { User } from './entities/user.entity';
+import { Task } from './entities/task.entity';
 
-const app: Express = express();
-
-// Swagger configuration
-const swaggerOptions = {
-  definition: {
-    openapi: '3.0.0',
-    info: {
-      title: 'LeetCode Clone API',
-      version: '1.0.0',
-      description: 'API documentation for LeetCode Clone',
-    },
-    servers: [
-      {
-        url: 'http://localhost:3000',
-        description: 'Development server',
-      },
-    ],
-  },
-  apis: ['./src/routes/*.ts', './src/controllers/*.ts'],
-};
-
-const swaggerSpec = swaggerJSDoc(swaggerOptions);
-
-// Middleware
-app.use(express.json());
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-app.use('/api', routes);
-
-// Error handling middleware
-app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
-  console.error(err.stack);
-  res.status(500).json({ error: 'Something went wrong!' });
-});
-
-const PORT = process.env.PORT || 3000;
-
-const startServer = async () => {
+async function main() {
   try {
-    await initializeDatabase();
-    app.listen(PORT, () => {
-      console.log(`Server is running on port ${PORT}`);
-    });
+    await AppDataSource.initialize();
+    console.log('База данных успешно подключена');
+
+    // Пример создания пользователя
+    const userRepository = AppDataSource.getRepository(User);
+    const taskRepository = AppDataSource.getRepository(Task);
+
+    const user = new User();
+    user.username = 'test_user';
+    user.email = 'test@example.com';
+    user.password = 'password123';
+    await userRepository.save(user);
+
+    // Пример создания задачи
+    const task = new Task();
+    task.title = 'Тестовая задача';
+    task.description = 'Описание тестовой задачи';
+    task.user = user;
+    await taskRepository.save(task);
+
   } catch (error) {
-    console.error('Failed to start server:', error);
-    process.exit(1);
+    console.error('Ошибка при подключении к базе данных:', error);
   }
-};
+}
 
-startServer();
-
-export default app; 
+main(); 
