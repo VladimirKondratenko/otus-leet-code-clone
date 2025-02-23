@@ -1,34 +1,57 @@
-import "reflect-metadata"
-import { AppDataSource } from "./config/database.config"
-import { User } from "./entities/user.entity"
-import { Task } from "./entities/task.entity"
+import express, { Express, Request, Response, NextFunction } from 'express';
+import swaggerUi from 'swagger-ui-express';
+import swaggerJSDoc from 'swagger-jsdoc';
+import { routes } from './routes';
+import { initializeDatabase } from './config/database';
 
-async function main() {
-    try {
-        await AppDataSource.initialize()
-        console.log("База данных успешно подключена")
+const app: Express = express();
 
-        // Пример создания пользователя
-        const userRepository = AppDataSource.getRepository(User)
-        const user = new User()
-        user.username = "test_user"
-        user.email = "test@example.com"
-        user.password = "password123"
-        await userRepository.save(user)
+// Swagger configuration
+const swaggerOptions = {
+  definition: {
+    openapi: '3.0.0',
+    info: {
+      title: 'LeetCode Clone API',
+      version: '1.0.0',
+      description: 'API documentation for LeetCode Clone',
+    },
+    servers: [
+      {
+        url: 'http://localhost:3000',
+        description: 'Development server',
+      },
+    ],
+  },
+  apis: ['./src/routes/*.ts', './src/controllers/*.ts'],
+};
 
-        // Пример создания задачи
-        const taskRepository = AppDataSource.getRepository(Task)
-        const task = new Task()
-        task.title = "Тестовая задача"
-        task.description = "Описание тестовой задачи"
-        task.status = "В процессе"
-        task.user = user
-        await taskRepository.save(task)
+const swaggerSpec = swaggerJSDoc(swaggerOptions);
 
-        console.log("Данные успешно сохранены")
-    } catch (error) {
-        console.error("Ошибка:", error)
-    }
-}
+// Middleware
+app.use(express.json());
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.use('/api', routes);
 
-main() 
+// Error handling middleware
+app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+  console.error(err.stack);
+  res.status(500).json({ error: 'Something went wrong!' });
+});
+
+const PORT = process.env.PORT || 3000;
+
+const startServer = async () => {
+  try {
+    await initializeDatabase();
+    app.listen(PORT, () => {
+      console.log(`Server is running on port ${PORT}`);
+    });
+  } catch (error) {
+    console.error('Failed to start server:', error);
+    process.exit(1);
+  }
+};
+
+startServer();
+
+export default app; 
