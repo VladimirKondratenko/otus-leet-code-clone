@@ -1,0 +1,47 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    services:
+      mongodb:
+        image: mongo:latest
+        ports:
+          - 27017:27017
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '18'
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Run tests
+      run: npm test
+      env:
+        MONGODB_URI: mongodb://localhost:27017/leetcode-test
+
+    - name: Build Docker image
+      run: docker build -t leetcode-clone .
+
+    - name: Run Docker container
+      run: |
+        docker run -d -p 3000:3000 --name app leetcode-clone
+        sleep 10
+        docker ps
+
+    - name: Test running container
+      run: |
+        curl http://localhost:3000 || exit 1 
