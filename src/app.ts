@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import { AppDataSource } from './config/database.config';
 import { User } from './entities/user.entity';
 import { Task } from './entities/task.entity';
