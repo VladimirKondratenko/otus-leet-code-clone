@@ -1,57 +1,105 @@
-<<<<<<< Updated upstream
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '@/views/HomeView.vue'
 import ProblemView from '@/views/ProblemView.vue'
 import ProfileView from '@/views/ProfileView.vue'
-=======
-import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
-import TaskList from '@/components/TaskList.vue';
-import TaskDetail from '@/components/TaskDetail.vue';
-import UserProfile from '@/components/UserProfile.vue';
 
-// Функция для проверки аутентификации
 const isAuthenticated = (): boolean => {
-  const token = localStorage.getItem('token');
-  return !!token;
-};
+  const token = localStorage.getItem('token')
+  return !!token
+}
 
-const routes: Array<RouteRecordRaw> = [
+const isAdmin = (): boolean => {
+  const user = localStorage.getItem('user')
+  if (!user) return false
+  return JSON.parse(user).role === 'admin'
+}
+
+const routes = [
   {
     path: '/',
     name: 'home',
-    component: TaskList,
+    component: HomeView,
     meta: {
-      title: 'Список задач',
-      requiresAuth: false
+      title: 'Главная'
     }
   },
   {
-    path: '/task/:id',
-    name: 'task',
-    component: TaskDetail,
+    path: '/problem/:id',
+    name: 'problem',
+    component: ProblemView,
     props: true,
     meta: {
-      title: 'Детали задачи',
-      requiresAuth: false
+      title: 'Задача'
     }
   },
   {
-    path: '/profile/:userId',
+    path: '/profile',
     name: 'profile',
-    component: UserProfile,
-    props: true,
-    meta: {
-      title: 'Профиль пользователя',
-      requiresAuth: true
+    component: ProfileView,
+    meta: { 
+      requiresAuth: true,
+      title: 'Профиль'
     }
+  },
+  {
+    path: '/admin',
+    name: 'admin',
+    component: () => import('@/views/admin/AdminLayout.vue'),
+    meta: { 
+      requiresAuth: true,
+      requiresAdmin: true,
+      title: 'Панель управления'
+    },
+    children: [
+      {
+        path: 'problems',
+        name: 'admin-problems',
+        component: () => import('@/views/admin/ProblemList.vue'),
+        meta: { 
+          title: 'Управление задачами'
+        }
+      },
+      {
+        path: 'problems/create',
+        name: 'admin-problem-create',
+        component: () => import('@/views/admin/ProblemForm.vue'),
+        meta: { 
+          title: 'Создание задачи'
+        }
+      },
+      {
+        path: 'problems/:id/edit',
+        name: 'admin-problem-edit',
+        component: () => import('@/views/admin/ProblemForm.vue'),
+        props: true,
+        meta: { 
+          title: 'Редактирование задачи'
+        }
+      },
+      {
+        path: 'tags',
+        name: 'admin-tags',
+        component: () => import('@/views/admin/TagList.vue'),
+        meta: { 
+          title: 'Управление тегами'
+        }
+      },
+      {
+        path: 'users',
+        name: 'admin-users',
+        component: () => import('@/views/admin/UserList.vue'),
+        meta: { 
+          title: 'Управление пользователями'
+        }
+      }
+    ]
   },
   {
     path: '/login',
     name: 'login',
     component: () => import('@/components/Login.vue'),
     meta: {
-      title: 'Вход',
-      requiresAuth: false
+      title: 'Вход в систему'
     }
   },
   {
@@ -59,44 +107,29 @@ const routes: Array<RouteRecordRaw> = [
     name: 'not-found',
     component: () => import('@/components/NotFound.vue'),
     meta: {
-      title: 'Страница не найдена',
-      requiresAuth: false
+      title: 'Страница не найдена'
     }
   }
-];
->>>>>>> Stashed changes
+]
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
-  routes: [
-    {
-      path: '/',
-      name: 'home',
-      component: HomeView
-    },
-    {
-      path: '/problem/:id',
-      name: 'problem',
-      component: ProblemView,
-      props: true
-    },
-    {
-      path: '/profile',
-      name: 'profile',
-      component: ProfileView,
-      meta: { requiresAuth: true }
-    }
-  ]
+  routes
 })
 
-<<<<<<< Updated upstream
 // Защита маршрутов, требующих авторизации
 router.beforeEach((to, from, next) => {
-  const isAuthenticated = localStorage.getItem('token') // Простая проверка авторизации
-  
+  // Установка заголовка страницы
+  document.title = `${to.meta.title} | LeetCode Clone`
+
   if (to.matched.some(record => record.meta.requiresAuth)) {
-    if (!isAuthenticated) {
-      next({ name: 'login' })
+    if (!isAuthenticated()) {
+      next({ 
+        name: 'login',
+        query: { redirect: to.fullPath }
+      })
+    } else if (to.matched.some(record => record.meta.requiresAdmin) && !isAdmin()) {
+      next({ name: 'home' })
     } else {
       next()
     }
@@ -105,30 +138,9 @@ router.beforeEach((to, from, next) => {
   }
 })
 
-export default router 
-=======
-// Navigation Guards
-router.beforeEach((to, from, next) => {
-  // Установка заголовка страницы
-  document.title = `${to.meta.title} | LeetCode Clone`;
-
-  // Проверка аутентификации
-  if (to.meta.requiresAuth && !isAuthenticated()) {
-    // Сохраняем путь, куда пользователь пытался попасть
-    next({ 
-      name: 'login',
-      query: { redirect: to.fullPath }
-    });
-  } else {
-    next();
-  }
-});
-
 // Глобальный guard после навигации
 router.afterEach((to, from) => {
-  // Можно добавить аналитику или другие действия после навигации
-  console.log(`Navigated from ${String(from.name)} to ${String(to.name)}`);
-});
+  console.log(`Navigated from ${String(from.name)} to ${String(to.name)}`)
+})
 
-export default router; 
->>>>>>> Stashed changes
+export default router
