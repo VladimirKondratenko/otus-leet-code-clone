@@ -1,0 +1,44 @@
+<div class="problem-list-container">
+  <div class="filters">
+    <h3>Теги</h3>
+    <div class="tags">
+      <button
+        *ngFor="let tag of tags"
+        class="tag-button"
+        [class.selected]="isTagSelected(tag.id)"
+        (click)="onTagSelect(tag.id)"
+      >
+        {{ tag.name }}
+      </button>
+    </div>
+  </div>
+
+  <div class="problems">
+    <div *ngIf="loading" class="loading">
+      Загрузка задач...
+    </div>
+
+    <div *ngIf="error" class="error">
+      {{ error }}
+    </div>
+
+    <div *ngIf="!loading && !error" class="problems-grid">
+      <div *ngFor="let problem of problems" class="problem-card">
+        <h3>{{ problem.title }}</h3>
+        <p class="difficulty" [ngClass]="problem.difficulty.toLowerCase()">
+          {{ problem.difficulty }}
+        </p>
+        <div class="tags">
+          <span *ngFor="let tag of problem.tags" class="tag">
+            {{ tag.name }}
+          </span>
+        </div>
+        <p class="description">{{ problem.description }}</p>
+        <div class="actions">
+          <button class="solve-button">Решить</button>
+          <button class="edit-button">Редактировать</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> 
