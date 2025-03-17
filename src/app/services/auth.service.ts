@@ -1,67 +1,58 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable, tap } from 'rxjs';
-import { User, AuthResponse, LoginRequest, RegisterRequest } from '../models/user.model';
+import { BehaviorSubject, Observable, map } from 'rxjs';
 import { environment } from '../../environments/environment';
+import { User } from '../models/user.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private currentUserSubject = new BehaviorSubject<User | null>(null);
-  currentUser$ = this.currentUserSubject.asObservable();
-  
-  private isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
-  isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
+  private currentUserSubject: BehaviorSubject<User | null>;
+  public currentUser$: Observable<User | null>;
 
   constructor(private http: HttpClient) {
-    this.checkToken();
+    this.currentUserSubject = new BehaviorSubject<User | null>(
+      this.getUserFromStorage()
+    );
+    this.currentUser$ = this.currentUserSubject.asObservable();
   }
 
-  get currentUserValue(): User | null {
+  public get currentUserValue(): User | null {
     return this.currentUserSubject.value;
   }
 
-  private checkToken(): void {
-    const token = localStorage.getItem('token');
-    if (token) {
-      this.getCurrentUser().subscribe();
-    }
-  }
-
-  login(credentials: LoginRequest): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${environment.apiUrl}/auth/login`, credentials)
-      .pipe(
-        tap(response => this.handleAuthResponse(response))
-      );
-  }
-
-  register(userData: RegisterRequest): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${environment.apiUrl}/auth/register`, userData)
-      .pipe(
-        tap(response => this.handleAuthResponse(response))
-      );
+  login(email: string, password: string): Observable<User> {
+    return this.http.post<{ user: User; token: string }>(
+      `${environment.apiUrl}/auth/login`,
+      { email, password }
+    ).pipe(
+      map(response => {
+        const { user, token } = response;
+        localStorage.setItem('currentUser', JSON.stringify(user));
+        localStorage.setItem('token', token);
+        this.currentUserSubject.next(user);
+        return user;
+      })
+    );
   }
 
   logout(): void {
+    localStorage.removeItem('currentUser');
     localStorage.removeItem('token');
     this.currentUserSubject.next(null);
-    this.isAuthenticatedSubject.next(false);
   }
 
-  getCurrentUser(): Observable<User> {
-    return this.http.get<User>(`${environment.apiUrl}/auth/me`)
-      .pipe(
-        tap(user => {
-          this.currentUserSubject.next(user);
-          this.isAuthenticatedSubject.next(true);
-        })
-      );
+  isAuthenticated(): boolean {
+    return !!this.currentUserValue;
   }
 
-  private handleAuthResponse(response: AuthResponse): void {
-    localStorage.setItem('token', response.token);
-    this.currentUserSubject.next(response.user);
-    this.isAuthenticatedSubject.next(true);
+  isAdmin(): boolean {
+    return this.currentUserValue?.role === 'admin';
+  }
+
+  private getUserFromStorage(): User | null {
+    const userStr = localStorage.getItem('currentUser');
+    return userStr ? JSON.parse(userStr) : null;
   }
 } 

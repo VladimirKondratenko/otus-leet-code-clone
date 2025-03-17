@@ -1,12 +1,21 @@
+import { Tag } from './tag.model';
+
+export interface Example {
+  input: string;
+  output: string;
+  explanation?: string;
+}
+
 export interface Problem {
   id: number;
   title: string;
   description: string;
-  difficulty: 'easy' | 'medium' | 'hard';
+  difficulty: 'Easy' | 'Medium' | 'Hard';
   tags: Tag[];
-  examples: ProblemExample[];
-  createdAt: string;
-  updatedAt: string;
+  examples: Example[];
+  solution: string;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface ProblemExample {
@@ -15,18 +24,12 @@ export interface ProblemExample {
   explanation?: string;
 }
 
-export interface Tag {
-  id: number;
-  name: string;
-  problemCount: number;
-}
-
 export interface CreateProblemRequest {
   title: string;
   description: string;
-  difficulty: 'easy' | 'medium' | 'hard';
+  difficulty: 'Easy' | 'Medium' | 'Hard';
   tagIds: number[];
-  examples: Omit<ProblemExample, 'id'>[];
+  examples: Omit<Example, 'id'>[];
 }
 
 export interface UpdateProblemRequest extends Partial<CreateProblemRequest> {

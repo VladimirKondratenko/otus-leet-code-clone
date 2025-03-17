@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Tag } from '../models/problem.model';
+import { Tag } from '../models/tag.model';
 import { environment } from '../../environments/environment';
 
 @Injectable({
@@ -20,12 +20,12 @@ export class TagService {
     return this.http.get<Tag>(`${this.apiUrl}/${id}`);
   }
 
-  createTag(name: string): Observable<Tag> {
-    return this.http.post<Tag>(this.apiUrl, { name });
+  createTag(tag: Omit<Tag, 'id'>): Observable<Tag> {
+    return this.http.post<Tag>(this.apiUrl, tag);
   }
 
-  updateTag(id: number, name: string): Observable<Tag> {
-    return this.http.put<Tag>(`${this.apiUrl}/${id}`, { name });
+  updateTag(id: number, tag: Tag): Observable<Tag> {
+    return this.http.put<Tag>(`${this.apiUrl}/${id}`, tag);
   }
 
   deleteTag(id: number): Observable<void> {
