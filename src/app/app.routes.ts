@@ -1,6 +1,13 @@
 import { Routes } from '@angular/router';
+import { ProblemListComponent } from './components/problem-list/problem-list.component';
+import { TagListComponent } from './components/tags/tag-list.component';
 
 export const routes: Routes = [
+  {
+    path: '',
+    redirectTo: 'problems',
+    pathMatch: 'full'
+  },
   {
     path: 'problems',
     component: ProblemListComponent
@@ -10,12 +17,7 @@ export const routes: Routes = [
     component: TagListComponent
   },
   {
-    path: 'users',
-    component: UserListComponent
-  },
-  {
-    path: '',
-    redirectTo: 'problems',
-    pathMatch: 'full'
+    path: '**',
+    redirectTo: 'problems'
   }
 ]; 

@@ -1,0 +1,68 @@
+// Цветовая палитра
+$primary-color: #007bff;
+$secondary-color: #6c757d;
+$success-color: #28a745;
+$warning-color: #ffc107;
+$danger-color: #dc3545;
+$light-color: #f8f9fa;
+$dark-color: #343a40;
+
+// Отступы
+$spacing-xs: 4px;
+$spacing-sm: 8px;
+$spacing-md: 16px;
+$spacing-lg: 24px;
+$spacing-xl: 32px;
+
+// Границы
+$border-radius-sm: 4px;
+$border-radius-md: 8px;
+$border-radius-lg: 16px;
+$border-color: #ddd;
+
+// Тени
+$box-shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+$box-shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+$box-shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+
+// Типография
+$font-size-sm: 0.875rem;
+$font-size-md: 1rem;
+$font-size-lg: 1.25rem;
+$font-size-xl: 1.5rem;
+
+// Анимации
+$transition-fast: 0.2s;
+$transition-normal: 0.3s;
+$transition-slow: 0.5s;
+
+// Миксины
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin card {
+  background: white;
+  border-radius: $border-radius-md;
+  padding: $spacing-md;
+  box-shadow: $box-shadow-sm;
+}
+
+@mixin button-base {
+  padding: $spacing-sm $spacing-md;
+  border: none;
+  border-radius: $border-radius-sm;
+  cursor: pointer;
+  font-size: $font-size-sm;
+  transition: background-color $transition-fast;
+}
+
+@mixin tag {
+  padding: $spacing-xs $spacing-sm;
+  border-radius: $border-radius-sm;
+  font-size: $font-size-sm;
+  background: $light-color;
+  color: $dark-color;
+} 

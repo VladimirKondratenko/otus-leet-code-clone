@@ -1,0 +1,32 @@
+@import './styles/variables';
+
+.main-nav {
+  background: white;
+  padding: $spacing-md $spacing-lg;
+  box-shadow: $box-shadow-sm;
+  margin-bottom: $spacing-lg;
+
+  a {
+    color: $dark-color;
+    text-decoration: none;
+    padding: $spacing-sm $spacing-md;
+    margin-right: $spacing-md;
+    border-radius: $border-radius-sm;
+    transition: all $transition-fast;
+
+    &:hover {
+      background: $light-color;
+    }
+
+    &.active {
+      background: $primary-color;
+      color: white;
+    }
+  }
+}
+
+.main-content {
+  padding: 0 $spacing-lg;
+  max-width: 1200px;
+  margin: 0 auto;
+} 
