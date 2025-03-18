@@ -31,12 +31,14 @@ import { MatChipInputEvent } from '@angular/material/chips';
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Теги</mat-label>
           <mat-chip-grid #chipGrid>
-            <mat-chip-row *ngFor="let tag of tags" (removed)="removeTag(tag)">
-              {{tag}}
-              <button matChipRemove>
-                <mat-icon>cancel</mat-icon>
-              </button>
-            </mat-chip-row>
+            @for (tag of tags; track $index) {
+              <mat-chip-row (removed)="removeTag(tag)">
+                {{tag}}
+                <button matChipRemove>
+                  <mat-icon>cancel</mat-icon>
+                </button>
+              </mat-chip-row>
+            }
           </mat-chip-grid>
           <input placeholder="Новый тег..."
                  [matChipInputFor]="chipGrid"

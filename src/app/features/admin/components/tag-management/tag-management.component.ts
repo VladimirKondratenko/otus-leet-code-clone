@@ -50,20 +50,22 @@ import * as fromTag from '../../../../store/reducers/tag.reducer';
         </div>
 
         <div *ngIf="!(loading$ | async) && !(error$ | async)" class="tags-grid">
-          <div *ngFor="let tag of tags$ | async" class="tag-card">
-            <div class="tag-content">
-              <h4>{{ tag.name }}</h4>
-              <p *ngIf="tag.description">{{ tag.description }}</p>
+          @for (tag of tags$ | async; track tag.id) {
+            <div class="tag-card">
+              <div class="tag-content">
+                <h4>{{ tag.name }}</h4>
+                <p *ngIf="tag.description">{{ tag.description }}</p>
+              </div>
+              <div class="tag-actions">
+                <button class="edit-button" (click)="onEdit(tag)">
+                  Редактировать
+                </button>
+                <button class="delete-button" (click)="onDelete(tag.id)">
+                  Удалить
+                </button>
+              </div>
             </div>
-            <div class="tag-actions">
-              <button class="edit-button" (click)="onEdit(tag)">
-                Редактировать
-              </button>
-              <button class="delete-button" (click)="onDelete(tag.id)">
-                Удалить
-              </button>
-            </div>
-          </div>
+          }
         </div>
       </div>
     </div>
