@@ -10,8 +10,8 @@ export interface Problem {
   id: number;
   title: string;
   description: string;
-  difficulty: 'Easy' | 'Medium' | 'Hard';
-  tags: Tag[];
+  difficulty: 'easy' | 'medium' | 'hard';
+  tags: string[];
   examples: Example[];
   solution: string;
   createdAt: Date;

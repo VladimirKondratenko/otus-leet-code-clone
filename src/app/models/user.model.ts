@@ -1,12 +1,12 @@
 export interface User {
   id: number;
-  email: string;
   username: string;
+  email: string;
   role: 'admin' | 'user';
-  isBlocked: boolean;
-  solvedProblems: number;
-  createdAt: string;
-  updatedAt: string;
+  firstName?: string;
+  lastName?: string;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface AuthResponse {

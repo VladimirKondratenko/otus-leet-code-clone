@@ -5,21 +5,27 @@ import { AdminGuard } from './guards/admin.guard';
 
 const routes: Routes = [
   {
-    path: '',
-    loadChildren: () => import('./features/public/public.module').then(m => m.PublicModule)
+    path: 'login',
+    loadChildren: () => import('./views/login/login.module').then(m => m.LoginModule)
   },
   {
     path: 'admin',
     canActivate: [AuthGuard, AdminGuard],
-    loadChildren: () => import('./features/admin/admin.module').then(m => m.AdminModule)
+    loadChildren: () => import('./views/admin/admin.module').then(m => m.AdminModule)
   },
   {
-    path: 'auth',
-    loadChildren: () => import('./features/auth/auth.module').then(m => m.AuthModule)
+    path: 'problems',
+    canActivate: [AuthGuard],
+    loadChildren: () => import('./views/problems/problems.module').then(m => m.ProblemsModule)
+  },
+  {
+    path: '',
+    redirectTo: 'problems',
+    pathMatch: 'full'
   },
   {
     path: '**',
-    redirectTo: ''
+    redirectTo: 'problems'
   }
 ];
 
