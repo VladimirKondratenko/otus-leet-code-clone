@@ -1,0 +1,43 @@
+<div class="user-profile-container">
+  <div class="loading" *ngIf="loading$ | async">
+    Загрузка...
+  </div>
+
+  <div class="error" *ngIf="error$ | async as error">
+    {{ error }}
+  </div>
+
+  <div class="profile-card" *ngIf="user$ | async as user">
+    <h2>Профиль пользователя</h2>
+    
+    <div class="profile-info">
+      <div class="info-group">
+        <label>Имя пользователя:</label>
+        <span>{{ user.username }}</span>
+      </div>
+
+      <div class="info-group">
+        <label>Email:</label>
+        <span>{{ user.email }}</span>
+      </div>
+
+      <div class="info-group">
+        <label>Рейтинг:</label>
+        <mat-form-field>
+          <input matInput type="number" [value]="user.rating"
+                 (change)="onRatingChange($event.target.value)">
+        </mat-form-field>
+      </div>
+
+      <div class="info-group">
+        <label>Дата регистрации:</label>
+        <span>{{ user.createdAt | date }}</span>
+      </div>
+
+      <div class="info-group">
+        <label>Последнее обновление:</label>
+        <span>{{ user.updatedAt | date }}</span>
+      </div>
+    </div>
+  </div>
+</div> 

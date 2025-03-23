@@ -1,0 +1,124 @@
+@import '../../styles/variables';
+
+.problem-detail-container {
+  padding: $spacing-lg;
+
+  .loading, .error {
+    @include flex-center;
+    padding: $spacing-xl;
+    font-size: $font-size-lg;
+  }
+
+  .error {
+    color: $danger-color;
+  }
+
+  .problem-card {
+    @include card;
+    max-width: 800px;
+    margin: 0 auto;
+
+    .problem-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: $spacing-md;
+
+      h2 {
+        margin: 0;
+        color: $dark-color;
+      }
+
+      .difficulty {
+        padding: $spacing-xs $spacing-sm;
+        border-radius: $border-radius-sm;
+        font-size: $font-size-sm;
+        font-weight: 500;
+
+        &.easy {
+          background: $success-color;
+          color: white;
+        }
+
+        &.medium {
+          background: $warning-color;
+          color: $dark-color;
+        }
+
+        &.hard {
+          background: $danger-color;
+          color: white;
+        }
+      }
+    }
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: $spacing-sm;
+      margin-bottom: $spacing-lg;
+
+      .tag {
+        @include tag;
+      }
+    }
+
+    .problem-content {
+      h3 {
+        color: $dark-color;
+        margin-bottom: $spacing-md;
+      }
+
+      .description {
+        margin-bottom: $spacing-lg;
+      }
+
+      .examples {
+        margin-bottom: $spacing-lg;
+
+        .example {
+          background: $light-color;
+          padding: $spacing-md;
+          border-radius: $border-radius-sm;
+          margin-bottom: $spacing-md;
+
+          strong {
+            color: $dark-color;
+            display: block;
+            margin-bottom: $spacing-xs;
+          }
+
+          pre {
+            background: white;
+            padding: $spacing-sm;
+            border-radius: $border-radius-sm;
+            margin: $spacing-xs 0;
+            overflow-x: auto;
+          }
+        }
+      }
+
+      .constraints {
+        ul {
+          list-style-type: none;
+          padding: 0;
+          margin: 0;
+
+          li {
+            padding: $spacing-xs 0;
+            color: $secondary-color;
+            position: relative;
+            padding-left: $spacing-md;
+
+            &:before {
+              content: "•";
+              position: absolute;
+              left: 0;
+              color: $primary-color;
+            }
+          }
+        }
+      }
+    }
+  }
+} 

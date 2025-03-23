@@ -1,0 +1,48 @@
+@import '../../styles/variables';
+
+.user-profile-container {
+  padding: $spacing-lg;
+
+  .loading, .error {
+    @include flex-center;
+    padding: $spacing-xl;
+    font-size: $font-size-lg;
+  }
+
+  .error {
+    color: $danger-color;
+  }
+
+  .profile-card {
+    @include card;
+    max-width: 600px;
+    margin: 0 auto;
+
+    h2 {
+      margin-bottom: $spacing-lg;
+      color: $dark-color;
+    }
+
+    .profile-info {
+      .info-group {
+        display: flex;
+        align-items: center;
+        margin-bottom: $spacing-md;
+
+        label {
+          width: 200px;
+          color: $secondary-color;
+          font-weight: 500;
+        }
+
+        span {
+          color: $dark-color;
+        }
+
+        mat-form-field {
+          width: 100px;
+        }
+      }
+    }
+  }
+} 

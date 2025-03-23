@@ -1,0 +1,58 @@
+<div class="problem-detail-container">
+  <div class="loading" *ngIf="loading$ | async">
+    Загрузка...
+  </div>
+
+  <div class="error" *ngIf="error$ | async as error">
+    {{ error }}
+  </div>
+
+  <div class="problem-card" *ngIf="problem$ | async as problem">
+    <div class="problem-header">
+      <h2>{{ problem.title }}</h2>
+      <span class="difficulty" [ngClass]="getDifficultyClass(problem.difficulty)">
+        {{ problem.difficulty }}
+      </span>
+    </div>
+
+    <div class="tags">
+      <span class="tag" *ngFor="let tag of problem.tags">
+        {{ tag.name }}
+      </span>
+    </div>
+
+    <div class="problem-content">
+      <div class="description">
+        <h3>Описание</h3>
+        <p>{{ problem.description }}</p>
+      </div>
+
+      <div class="examples" *ngIf="problem.examples?.length">
+        <h3>Примеры</h3>
+        <div class="example" *ngFor="let example of problem.examples">
+          <div class="example-input">
+            <strong>Входные данные:</strong>
+            <pre>{{ example.input }}</pre>
+          </div>
+          <div class="example-output">
+            <strong>Выходные данные:</strong>
+            <pre>{{ example.output }}</pre>
+          </div>
+          <div class="example-explanation" *ngIf="example.explanation">
+            <strong>Объяснение:</strong>
+            <p>{{ example.explanation }}</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="constraints" *ngIf="problem.constraints?.length">
+        <h3>Ограничения</h3>
+        <ul>
+          <li *ngFor="let constraint of problem.constraints">
+            {{ constraint }}
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div> 

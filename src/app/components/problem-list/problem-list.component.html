@@ -1,0 +1,74 @@
+<div class="problem-list-container">
+  <div class="filters">
+    <div class="filters-header">
+      <h3>Фильтры</h3>
+      <button mat-button color="warn" 
+              *ngIf="selectedTags.length > 0"
+              (click)="clearFilters()">
+        Очистить фильтры
+      </button>
+    </div>
+    <div class="tags">
+      <button class="tag-button" 
+              *ngFor="let tag of tags$ | async"
+              [class.selected]="isTagSelected(tag.id)"
+              (click)="onTagSelect(tag.id)">
+        {{ tag.name }}
+      </button>
+    </div>
+    <div class="add-tag">
+      <mat-form-field>
+        <input matInput [(ngModel)]="newTagName" placeholder="Новый тег">
+      </mat-form-field>
+      <button mat-raised-button color="primary" (click)="addNewTag()">
+        Добавить тег
+      </button>
+    </div>
+  </div>
+
+  <div class="problems">
+    <div class="loading" *ngIf="loading$ | async">
+      Загрузка...
+    </div>
+
+    <div class="error" *ngIf="error$ | async as error">
+      {{ error }}
+    </div>
+
+    <div class="problems-grid" *ngIf="filteredProblems$ | async as problems">
+      <div class="no-results" *ngIf="problems.length === 0">
+        Задачи не найдены
+      </div>
+      <div class="problem-card" *ngFor="let problem of problems; trackBy: trackByProblemId">
+        <h3>{{ problem.title }}</h3>
+        <span class="difficulty" [ngClass]="problem.difficulty.toLowerCase()">
+          {{ problem.difficulty }}
+        </span>
+        <div class="tags">
+          <span class="tag" *ngFor="let tag of problem.tags; trackBy: trackByTagId">
+            {{ tag.name }}
+            <button mat-icon-button (click)="removeTagFromProblem(problem.id, tag.id)">
+              <mat-icon>close</mat-icon>
+            </button>
+          </span>
+          <mat-form-field>
+            <mat-select placeholder="Добавить тег" (selectionChange)="addTagToProblem(problem.id, $event.value)">
+              <mat-option *ngFor="let tag of tags$ | async" [value]="tag.id">
+                {{ tag.name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <p class="description">{{ problem.description }}</p>
+        <div class="actions">
+          <button mat-raised-button color="primary" [routerLink]="['/problems', problem.id]">
+            Решить
+          </button>
+          <button mat-raised-button color="accent" [routerLink]="['/problems', problem.id, 'edit']">
+            Редактировать
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> 

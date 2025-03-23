@@ -1,0 +1,60 @@
+@import '../../styles/variables';
+
+.user-list-container {
+  padding: $spacing-lg;
+
+  h2 {
+    margin-bottom: $spacing-lg;
+    color: $dark-color;
+  }
+
+  .loading, .error {
+    @include flex-center;
+    padding: $spacing-xl;
+    font-size: $font-size-lg;
+  }
+
+  .error {
+    color: $danger-color;
+  }
+
+  table {
+    width: 100%;
+    margin-top: $spacing-md;
+
+    .mat-column-username {
+      width: 40%;
+    }
+
+    .mat-column-email {
+      width: 40%;
+    }
+
+    .mat-column-rating {
+      width: 20%;
+      text-align: center;
+    }
+
+    .clickable-row {
+      cursor: pointer;
+      transition: background-color $transition-fast;
+
+      &:hover {
+        background-color: $light-color;
+      }
+    }
+
+    a {
+      color: $primary-color;
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+
+    mat-form-field {
+      width: 100px;
+    }
+  }
+} 
