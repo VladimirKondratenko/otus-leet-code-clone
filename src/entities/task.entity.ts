@@ -12,6 +12,13 @@ export class Task {
   @Column()
   description: string;
 
+  @Column({
+    type: 'enum',
+    enum: ['easy', 'medium', 'hard'],
+    default: 'medium'
+  })
+  difficulty: 'easy' | 'medium' | 'hard';
+
   @Column({ default: false })
   isCompleted: boolean;
 
